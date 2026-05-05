@@ -24,7 +24,7 @@ export class SubjectsService {
 
   //  Get One Subject
   async findOne(id: number): Promise<Subject> {
-    const subject = await this.subjectRepository.findOneBy({ id });
+    const subject = await this.subjectRepository.findOneBy({id});
     if (!subject) {
       throw new NotFoundException(`Subject with ID ${id} not found`);
     }

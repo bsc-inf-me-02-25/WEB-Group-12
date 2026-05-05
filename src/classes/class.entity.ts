@@ -3,15 +3,21 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 @Entity()
 export class Class {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column()
-  className: string;
+  className!: string;
 
   @Column()
-  gradeLevel: string;
+  gradeLevel!: string;
 
-  // store student IDs as simple array
+   //store student IDs as simple array
   @Column('simple-array', { nullable: true })
-  studentIds: number[];
+  studentIds!: number[];
+
+  //@Column({
+    //type: 'varchar2',
+    //nullable: true,
+  //})
+  //studentIds: string;
 }
