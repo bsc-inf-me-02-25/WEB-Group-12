@@ -7,17 +7,23 @@ import { StudentsModule } from './students/students.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [ 
+  imports: [
     TypeOrmModule.forRoot({
       type: 'oracle',
       host: 'localhost',
       port: 1521,
-      username: 'SCHOOL_NAME',
-      password: '2006',
-      serviceName: 'xe',
+      username: 'student_system',
+      password: 'password123',
+      serviceName: 'XEPDB1',
+
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-    }),SubjectsModule, ClassesModule, StudentsModule],
+    }),
+
+    SubjectsModule,
+    ClassesModule,
+    StudentsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

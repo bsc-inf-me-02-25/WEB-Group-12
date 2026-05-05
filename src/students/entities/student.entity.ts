@@ -35,7 +35,6 @@ export class Student {
   dateOfBirth!: string;
 
   @ApiProperty({ enum: Gender, description: 'Gender' })
-  @Column({ type: 'enum', enum: Gender })
   gender!: Gender;
 
   @ApiProperty({ description: 'Grade level' })
