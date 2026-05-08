@@ -1,66 +1,40 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsEnum,
-  IsOptional,
-  IsEmail,
-  IsDateString,
-  Matches,
-} from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { Gender } from '../entities/student.entity';
+import { IsNotEmpty, IsString, IsEnum } from 'class-validator';
 
 export class CreateStudentDto {
-  @ApiProperty({ description: 'First name of the student' })
-  @IsString()
+
   @IsNotEmpty()
-  firstName!: string;
-
-  @ApiProperty({ description: 'Last name of the student' })
   @IsString()
+  studentNumber: string;
+
   @IsNotEmpty()
-  lastName!: string;
-
-  @ApiProperty({ description: 'Unique student number' })
   @IsString()
+  firstName: string;
+
   @IsNotEmpty()
-  studentNumber!: string;
-
-  @ApiProperty({ description: 'Date of birth in YYYY-MM-DD format' })
-  @IsDateString()
-  dateOfBirth!: string;
-
-  @ApiProperty({ enum: Gender, description: 'Gender of the student' })
-  @IsEnum(Gender)
-  gender!: Gender;
-
-  @ApiProperty({ description: 'Grade level, e.g., "Grade 1"' })
   @IsString()
+  lastName: string;
+
   @IsNotEmpty()
-  grade!: string;
-
-  @ApiProperty({ description: 'Stream, e.g., "A"' })
   @IsString()
+  dateOfBirth: string;
+
   @IsNotEmpty()
-  stream!: string;
+  @IsEnum(['male', 'female'])
+  gender: string;
 
-  @ApiProperty({ description: 'Parent or guardian name' })
-  @IsString()
   @IsNotEmpty()
-  parentName!: string;
-
-  @ApiProperty({ description: 'Parent or guardian phone number' })
   @IsString()
+  grade: string;
+
   @IsNotEmpty()
-  @Matches(/^\+?[0-9\s\-()]{7,15}$/, { message: 'parentPhone must be a valid phone number' })
-  parentPhone!: string;
-
-  @ApiProperty({ description: 'Parent or guardian email', required: false })
-  @IsOptional()
-  @IsEmail()
-  parentEmail?: string;
-
-  @IsOptional()
   @IsString()
-  parentAddress?: string;
+  stream: string;
+
+  @IsNotEmpty()
+  @IsString()
+  parentName: string;
+
+  @IsNotEmpty()
+  @IsString()
+  parentPhone: string;
 }

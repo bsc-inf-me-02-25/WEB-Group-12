@@ -1,11 +1,32 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateStudentDto } from './create-student.dto';
-import { IsBoolean, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
-export class UpdateStudentDto extends PartialType(CreateStudentDto) {
-  @ApiProperty({ description: 'Whether the student is active', required: false })
+export class UpdateStudentDto {
+
   @IsOptional()
-  @IsBoolean()
-  isActive?: boolean;
+  @IsString()
+  studentNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+
+  @IsOptional()
+  @IsString()
+  grade?: string;
+
+  @IsOptional()
+  @IsString()
+  stream?: string;
+
+  @IsOptional()
+  @IsString()
+  parentName?: string;
+
+  @IsOptional()
+  @IsString()
+  parentPhone?: string;
 }

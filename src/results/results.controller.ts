@@ -1,7 +1,7 @@
 import { Controller, Post, Get, Body } from '@nestjs/common';
 
-@Controller('classes')
-export class ClassesController {
+@Controller('results')
+export class ResultsController {
 
   @Post()
   create(@Body() body: any) {

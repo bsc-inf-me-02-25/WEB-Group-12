@@ -16,6 +16,7 @@ export class StudentsService {
     private readonly studentRepository: Repository<Student>,
   ) {}
 
+  // CREATE STUDENT
   async create(createStudentDto: CreateStudentDto): Promise<Student> {
     const existing = await this.studentRepository.findOne({
       where: { studentNumber: createStudentDto.studentNumber },
@@ -31,6 +32,7 @@ export class StudentsService {
     return this.studentRepository.save(student);
   }
 
+  // GET ALL STUDENTS
   async findAll(query?: {
     grade?: string;
     stream?: string;
@@ -44,7 +46,6 @@ export class StudentsService {
     if (query?.isActive !== undefined) where.isActive = query.isActive;
 
     if (query?.search) {
-      // Search by name or student number
       return this.studentRepository.find({
         where: [
           { firstName: Like(`%${query.search}%`), ...where },
@@ -61,30 +62,49 @@ export class StudentsService {
     });
   }
 
+  // GET ONE STUDENT
   async findOne(id: string): Promise<Student> {
-    const student = await this.studentRepository.findOne({ where: { id } });
+    const studentId = Number(id);
+
+    const student = await this.studentRepository.findOne({
+      where: { id: studentId },
+    });
+
     if (!student) {
       throw new NotFoundException(`Student with ID "${id}" not found.`);
     }
+
     return student;
   }
 
+  // FIND BY STUDENT NUMBER
   async findByStudentNumber(studentNumber: string): Promise<Student> {
     const student = await this.studentRepository.findOne({
       where: { studentNumber },
     });
+
     if (!student) {
       throw new NotFoundException(
         `Student with number "${studentNumber}" not found.`,
       );
     }
+
     return student;
   }
 
+  // UPDATE STUDENT
   async update(id: string, updateStudentDto: UpdateStudentDto): Promise<Student> {
-    const student = await this.findOne(id);
+    const studentId = Number(id);
 
-    // If studentNumber is being changed, check for conflicts
+    const student = await this.studentRepository.findOne({
+      where: { id: studentId },
+    });
+
+    if (!student) {
+      throw new NotFoundException(`Student with ID "${id}" not found.`);
+    }
+
+    // Check duplicate student number
     if (
       updateStudentDto.studentNumber &&
       updateStudentDto.studentNumber !== student.studentNumber
@@ -92,6 +112,7 @@ export class StudentsService {
       const conflict = await this.studentRepository.findOne({
         where: { studentNumber: updateStudentDto.studentNumber },
       });
+
       if (conflict) {
         throw new ConflictException(
           `Student number "${updateStudentDto.studentNumber}" is already taken.`,
@@ -100,21 +121,31 @@ export class StudentsService {
     }
 
     Object.assign(student, updateStudentDto);
+
     return this.studentRepository.save(student);
   }
 
+  // DELETE STUDENT
   async remove(id: string): Promise<{ message: string }> {
     const student = await this.findOne(id);
+
     await this.studentRepository.remove(student);
-    return { message: `Student "${student.firstName} ${student.lastName}" has been deleted.` };
+
+    return {
+      message: `Student "${student.firstName} ${student.lastName}" has been deleted.`,
+    };
   }
 
+  // DEACTIVATE STUDENT
   async deactivate(id: string): Promise<Student> {
     const student = await this.findOne(id);
+
     student.isActive = false;
+
     return this.studentRepository.save(student);
   }
 
+  // STATS BY GRADE
   async getStatsByGrade(): Promise<{ grade: string; total: number }[]> {
     const result = await this.studentRepository
       .createQueryBuilder('student')
@@ -125,6 +156,9 @@ export class StudentsService {
       .orderBy('student.grade', 'ASC')
       .getRawMany();
 
-    return result.map((r) => ({ grade: r.grade, total: Number(r.total) }));
+    return result.map((r) => ({
+      grade: r.grade,
+      total: Number(r.total),
+    }));
   }
 }
